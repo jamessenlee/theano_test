@@ -10,6 +10,10 @@ import sys
 import timeit
 import matplotlib.pyplot as plt
 
+
+mini_datasets = "mini_data_sets"
+
+
 def load_data(dataset):
     ''' Loads the dataset
 
@@ -44,12 +48,28 @@ def load_data(dataset):
 
     print('... loading data')
 
-    # Load the dataset
-    with gzip.open(dataset, 'rb') as f:
-        try:
-            train_set, valid_set, test_set = pickle.load(f, encoding='latin1')
-        except:
+    # Load mini dataset
+    if os.path.isfile(mini_datasets):
+	print ("read mini datasets")
+        with open(mini_datasets) as f:
             train_set, valid_set, test_set = pickle.load(f)
+ 
+    else:
+	#load org dataset
+    	with gzip.open(dataset, 'rb') as f:
+            try:
+                train_set, valid_set, test_set = pickle.load(f, encoding='latin1')
+            except:
+                train_set, valid_set, test_set = pickle.load(f)
+
+            print ('dumping mini datasets')
+	    
+            print (train_set[0].shape)
+
+	    print ('%d'.format("sssss"))
+	    with open(mini_datasets, 'wb') as f:
+        	pickle.dump(train_set[10:,10:],valid_set[10:,10:],test_set[10:,10:],f)
+  
     # train_set, valid_set, test_set format: tuple(input, target)
     # input is a numpy.ndarray of 2 dimensions (a matrix)
     # where each row corresponds to an example. target is a
@@ -124,7 +144,7 @@ class  LogisticRegression(object):
 
 
 	# negative Log likelyhood
-	def negative_log_likelyhood(p_y_given_x,y):
+	def negative_log_likelyhood(self,p_y_given_x,y):
 		return -T.mean(T.log(p_y_given_x)[y.shape[0],y]   )
 
 	
