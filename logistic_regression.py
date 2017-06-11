@@ -14,6 +14,25 @@ import matplotlib.pyplot as plt
 mini_datasets = "mini_data_sets"
 
 
+def gen_mini_datasets(data_xy,size):
+    dx,dy = data_xy
+    mini_dx = dx[:size,:]
+    mini_dy = dy[:size] 
+
+    print (mini_dx.shape)
+    print (mini_dy.shape)
+
+    return [dx,dy]
+
+
+def check_datasets_shape(data_xy):
+    dx,dy = data_xy
+
+    print (dx.shape)
+    print (dy.shape)
+
+
+
 def load_data(dataset):
     ''' Loads the dataset
 
@@ -54,6 +73,15 @@ def load_data(dataset):
         with open(mini_datasets) as f:
             train_set, valid_set, test_set = pickle.load(f)
  
+	print("checking train set shape")
+	check_datasets_shape(train_set)	
+
+	print("checking valid set shape")
+	check_datasets_shape(valid_set)	
+
+	print("checking test set shape")
+	check_datasets_shape(test_set)	
+	os._exit(1)
     else:
 	#load org dataset
     	with gzip.open(dataset, 'rb') as f:
@@ -64,12 +92,14 @@ def load_data(dataset):
 
             print ('dumping mini datasets')
 	    
-            print (train_set[0].shape)
-
-	    print ('%d'.format("sssss"))
+	    mini_train = gen_mini_datasets(train_set,10)	
+	    mini_valid = gen_mini_datasets(valid_set,10)	
+	    mini_test  = gen_mini_datasets(test_set,10)	
+	    md = [mini_train,mini_valid,mini_test]
 	    with open(mini_datasets, 'wb') as f:
-        	pickle.dump(train_set[10:,10:],valid_set[10:,10:],test_set[10:,10:],f)
+        	pickle.dump(md,f)
   
+	    os._exit(1)
     # train_set, valid_set, test_set format: tuple(input, target)
     # input is a numpy.ndarray of 2 dimensions (a matrix)
     # where each row corresponds to an example. target is a
