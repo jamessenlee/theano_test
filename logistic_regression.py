@@ -96,20 +96,46 @@ def load_data(dataset):
 learning_rate = 0.001
 input_size  = 28*28
 output_size = 10
+batch_size = 600
 
 
 class  LogisticRegression(object):
-	def __init__(self):
+	def __init__(self,inputs,outputs):
 		self.W = theano.shared(np.zeros(input_size*output_size,dtype=np.float64),name="W",borrow=True)	
 		self.b = theano.shared(np.zeros(output_size,dtype=np.float64),name="b",borrow=True)	
 		self.param = [self.W,self.b]
 		
+		#batch * input_size
+		self.inputs = inputs
+		#batch * output_size
+		self.output = outputs
+		
 
-		return
+		#batch * output_size
+		self.p_y_given_x = T.nnet.softmax(T.dot(self.inputs,self.W) + self.b)	
+		self.pred = T.argmax(self.p_y_given_x,axis=1)
+		self.cost = negative_log_likelyhood(self.pred,self.output)
+
+		self.g_W = T.grad(cost,self.W)
+		self.g_b = T.grad(cost,self.b)
+
+		self.upates = [(self.W, self.W - learning_rate * self.g_W),(self.b,self.b - learning_rate * self.g_b)]
+		
 
 
+	# negative Log likelyhood
+	def negative_log_likelyhood(p_y_given_x,y):
+		return -T.mean(T.log(p_y_given_x)[y.shape[0],y]   )
 
+	
+	def error():
+		return T.mean(T.neq(self.y_pred, self.outputs))
+		
+	
+	def predict():
+	
 
+		return None
 
 
 def mnist_train(data_sets):
@@ -125,7 +151,12 @@ def mnist_train(data_sets):
 	#plt.imshow(img_0)
 	#plt.show()
 
-	classifier = LogisticRegression()
+	x = T.matrix('x')
+	y = T.ivector('y')
+	
+
+
+	classifier = LogisticRegression(x,y)
 	
 
 
