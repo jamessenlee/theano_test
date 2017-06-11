@@ -93,6 +93,21 @@ def load_data(dataset):
     return rval
 
 
+learning_rate = 0.001
+input_size  = 28*28
+output_size = 10
+
+
+class  LogisticRegression(object):
+	def __init__(self):
+		self.W = theano.shared(np.zeros(input_size*output_size,dtype=np.float64),name="W",borrow=True)	
+		self.b = theano.shared(np.zeros(output_size,dtype=np.float64),name="b",borrow=True)	
+		self.param = [self.W,self.b]
+		
+
+		return
+
+
 
 
 
@@ -103,20 +118,15 @@ def mnist_train(data_sets):
 	test_set_x,test_set_y = datasets[2]
 
 
-	otx,oty = datasets[5]
+	#plot the first img
+	#otx,oty = datasets[5]
+	#plt.figure()
+	#img_0 = otx[0].reshape(28,28)
+	#plt.imshow(img_0)
+	#plt.show()
 
-	print ('aaaaaa')
-	print (otx[0].shape)
-	plt.figure()
-
-	img_0 = otx[0].reshape(28,28)
-	plt.imshow(img_0)
+	classifier = LogisticRegression()
 	
-	
-	plt.show()
-
-	print ('bbbbbbbbb')
-
 
 
 	return None
