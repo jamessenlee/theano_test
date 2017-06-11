@@ -106,9 +106,11 @@ def mnist_train(data_sets):
 	otx,oty = datasets[5]
 
 	print ('aaaaaa')
-	print ("%s").format(otx.shape())
+	print (otx[0].shape)
 	plt.figure()
-	plt.imshow(otx[0].reshape([8,8]))
+
+	img_0 = otx[0].reshape(28,28)
+	plt.imshow(img_0)
 	
 	
 	plt.show()
